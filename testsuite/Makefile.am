@@ -9,7 +9,7 @@ EXTRA_DIST =
 noinst_PROGRAMS = \
 	ut_simpleread                 
 
-INCLUDES =                                              \
+AM_CPPFLAGS =                                           \
 	@FUSE_CFLAGS@                                   \
 	-I. 						\
 	-I$(srcdir) -I$(top_srcdir) -I$(top_srcdir)/src	\

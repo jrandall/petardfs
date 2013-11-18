@@ -10,7 +10,7 @@
 
 EXTRA_DIST= 
 
-INCLUDES =                                              \
+AM_CPPFLAGS =                                           \
 	@FUSE_CFLAGS@	                                \
 	-I. 						\
 	-I$(srcdir) -I$(top_srcdir) 			\
