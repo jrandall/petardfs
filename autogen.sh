@@ -1,4 +1,4 @@
 #!/bin/sh
 
-autoreconf --verbose --install -I macros || (echo "autoreconf failed" && exit 1)
+autoreconf --verbose --install || (echo "autoreconf failed" && exit 1)
 

@@ -8,6 +8,7 @@
 # WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
+ACLOCAL_AMFLAGS = -I macros
 AUTOMAKE_OPTIONS = dist-bzip2 subdir-objects dejagnu
 NULL=
 
