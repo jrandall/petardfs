@@ -8,11 +8,11 @@
 # WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-AC_PREREQ(2.53)
 AC_INIT([petardfs],
         [0.0.2],
         [Ben Martin monkeyiq@users.sourceforge.net],
         [petardfs])
+AC_PREREQ([2.69])
 
 PACKAGE=$PACKAGE_NAME
 VERSION=$PACKAGE_VERSION
@@ -28,8 +28,15 @@ AC_SUBST(PETARDFS_BETA)
 AC_SUBST(PETARDFS_FULLV)
 AC_SUBST(PETARDFS_VERSION)
 
-AC_CONFIG_AUX_DIR(config)
+AC_CONFIG_AUX_DIR([config])
+AC_CONFIG_MACRO_DIR([macros])
 AC_CANONICAL_SYSTEM
+
+AC_PROG_CXX
+
+LT_INIT([disable-static])
+LT_PREREQ([2.4.2])
+
 AM_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE([1.9 tar-ustar dist-bzip2])
 
@@ -40,7 +47,6 @@ LF_SET_WARNINGS
 
 
 AC_SYS_LARGEFILE
-LT_INIT([disable-static])
 
 PKG_CHECK_MODULES(FUSE, fuse >= 2.2 )
 AC_SUBST(FUSE_CFLAGS)
