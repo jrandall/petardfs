@@ -59,12 +59,12 @@ using namespace std;
 /////////////////////////////////////////////////////////////////
 // Hanlding XML config file.
 #include <xercesc/sax/InputSource.hpp>
-#include <util/PlatformUtils.hpp>
+#include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLString.hpp>
-#include <util/XMLString.hpp>
-#include <parsers/XercesDOMParser.hpp>
-#include <dom/DOM.hpp>
-#include <framework/LocalFileInputSource.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include <xercesc/parsers/XercesDOMParser.hpp>
+#include <xercesc/dom/DOM.hpp>
+#include <xercesc/framework/LocalFileInputSource.hpp>
 using namespace XERCES_CPP_NAMESPACE;
 //XML string class
 class XStr
