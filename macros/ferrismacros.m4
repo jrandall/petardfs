@@ -26,7 +26,7 @@ dnl
 dnl @author Angus Lees <gusl@cse.unsw.edu.au>
 dnl @version $Id: ferrismacros.m4,v 1.6 2007/01/22 21:30:40 ben Exp $
 
-AC_DEFUN(AC_PATH_GENERIC,
+AC_DEFUN([AC_PATH_GENERIC],
 [dnl
 dnl we're going to need uppercase, lowercase and user-friendly versions of the
 dnl string `LIBRARY'
@@ -145,7 +145,7 @@ AC_ARG_WITH(DOWN-exec-prefix,[  --with-]DOWN[-exec-prefix=PFX Exec prefix where 
 
 dnl Force the use of libtool and AC_TRY_LINK!
 dnl http://www.mail-archive.com/libtool@gnu.org/msg01271.html
-AC_DEFUN(AM_FERRIS_LIBTOOL_TRYLINK,
+AC_DEFUN([AM_FERRIS_LIBTOOL_TRYLINK],
 [dnl
 dnl
 	am_ferris_libtool_trylink_pass=no
@@ -188,7 +188,7 @@ dnl for 64 bit building.
 dnl 
 dnl the STLPORT_CFLAGS etc are all cleared after a failed test.
 dnl
-AC_DEFUN(AM_FERRIS_STLPORT_INTERNAL_TRYLINK,
+AC_DEFUN([AM_FERRIS_STLPORT_INTERNAL_TRYLINK],
 [dnl
 dnl
 	AC_LANG_CPLUSPLUS
@@ -264,7 +264,7 @@ dnl if( success )
 dnl    AC_DEFINE( HAVE_STLPORT )
 dnl    AC_DEFINE( STLPORT_IOSIZE )
 dnl
-AC_DEFUN(AM_FERRIS_STLPORT,
+AC_DEFUN([AM_FERRIS_STLPORT],
 [dnl 
 dnl Get the cflags and libraries from pkg-config, stlport-config or attempt to
 dnl detect the STLPort on the users system.
@@ -435,7 +435,7 @@ dnl if( success )
 dnl    AC_DEFINE( HAVE_STLPORT )
 dnl    AC_DEFINE( STLPORT_IOSIZE )
 dnl
-AC_DEFUN(AM_FERRIS_STLPORT_OPTIONAL,
+AC_DEFUN([AM_FERRIS_STLPORT_OPTIONAL],
 [dnl 
 dnl
 
@@ -488,7 +488,7 @@ dnl
 dnl FERRIS_CFLAGS and FERRIS_LIBS are set and AC_SUBST()ed when library is found.
 dnl LIBFERRIS_CFLAGS and LIBFERRIS_LIBS are set and AC_SUBST()ed when library is found.
 dnl
-AC_DEFUN(AM_FERRIS_FERRIS,
+AC_DEFUN([AM_FERRIS_FERRIS],
 [dnl 
 dnl Get the cflags and libraries from pkg-config, stlport-config or attempt to
 dnl detect the STLPort on the users system.
@@ -536,7 +536,7 @@ dnl
 dnl FERRISUI_CFLAGS and FERRISUI_LIBS are set and AC_SUBST()ed when library is found.
 dnl LIBFERRISUI_CFLAGS and LIBFERRISUI_LIBS are set and AC_SUBST()ed when library is found.
 dnl
-AC_DEFUN(AM_FERRIS_FERRISUI,
+AC_DEFUN([AM_FERRIS_FERRISUI],
 [dnl 
 dnl Get the cflags and libraries from pkg-config, stlport-config or attempt to
 dnl detect the STLPort on the users system.
@@ -583,7 +583,7 @@ dnl ie. default is to REQUIRE sigc++ MINIMUM-VERSION or stop running.
 dnl
 dnl SIGC_CFLAGS and SIGC_LIBS are set and AC_SUBST()ed when library is found.
 dnl
-AC_DEFUN(AM_FERRIS_SIGC,
+AC_DEFUN([AM_FERRIS_SIGC],
 [dnl 
 dnl Get the cflags and libraries from pkg-config, stlport-config or attempt to
 dnl detect the STLPort on the users system.
@@ -634,7 +634,7 @@ dnl ie. default is to REQUIRE ferrisloki MINIMUM-VERSION or stop running.
 dnl
 dnl LOKI_CFLAGS and LOKI_LIBS are set and AC_SUBST()ed when library is found.
 dnl
-AC_DEFUN(AM_FERRIS_LOKI,
+AC_DEFUN([AM_FERRIS_LOKI],
 [dnl 
 dnl Get the cflags and libraries from pkg-config, stlport-config or attempt to
 dnl detect the STLPort on the users system.
@@ -676,7 +676,7 @@ dnl
 dnl STREAMS_CFLAGS and STREAMS_LIBS are set and AC_SUBST()ed when library is found.
 dnl FSTREAM_CFLAGS and FSTREAM_LIBS are set and AC_SUBST()ed when library is found.
 dnl
-AC_DEFUN(AM_FERRIS_STREAMS,
+AC_DEFUN([AM_FERRIS_STREAMS],
 [dnl 
 dnl Get the cflags and libraries from pkg-config, stlport-config or attempt to
 dnl detect the STLPort on the users system.
@@ -722,7 +722,7 @@ dnl ie. default is to REQUIRE stldb4 MINIMUM-VERSION or stop running.
 dnl
 dnl STLDB4_CFLAGS and STLDB4_LIBS are set and AC_SUBST()ed when library is found.
 dnl
-AC_DEFUN(AM_FERRIS_STLDB4,
+AC_DEFUN([AM_FERRIS_STLDB4],
 [dnl 
 dnl Get the cflags and libraries from pkg-config, stlport-config or attempt to
 dnl detect the STLPort on the users system.
@@ -763,7 +763,7 @@ dnl ie. default is to REQUIRE fampp2 MINIMUM-VERSION or stop running.
 dnl
 dnl FAMPP2_CFLAGS and FAMPP2_LIBS are set and AC_SUBST()ed when library is found.
 dnl
-AC_DEFUN(AM_FERRIS_FAMPP2,
+AC_DEFUN([AM_FERRIS_FAMPP2],
 [dnl 
 dnl Get the cflags and libraries from pkg-config or x-config
 dnl
@@ -801,7 +801,7 @@ dnl AM_FERRIS_INTERNAL_TRYLINK( CFLAGS, LIBS, HEADERS, BODY, [ACTION-IF-FOUND [,
 dnl Used internally to try to link to a library using C++ application
 dnl using the CFLAGS and LIBS. 
 dnl
-AC_DEFUN(AM_FERRIS_INTERNAL_TRYLINK,
+AC_DEFUN([AM_FERRIS_INTERNAL_TRYLINK],
 [dnl
 dnl
 	AC_LANG_CPLUSPLUS
@@ -836,7 +836,7 @@ dnl AM_FERRIS_INTERNAL_TRYRUN( CFLAGS, LIBS, HEADERS, BODY, [ACTION-IF-FOUND [, 
 dnl Used internally to try to link to a library using C++ application
 dnl using the CFLAGS and LIBS. 
 dnl
-AC_DEFUN(AM_FERRIS_INTERNAL_TRYRUN,
+AC_DEFUN([AM_FERRIS_INTERNAL_TRYRUN],
 [dnl
 dnl
 	AC_LANG_CPLUSPLUS
@@ -877,7 +877,7 @@ dnl XERCESC_CFLAGS and XERCESC_LIBS are set and AC_SUBST()ed when library is fou
 dnl XML4C_CFLAGS   and XML4C_LIBS   are set and AC_SUBST()ed when library is found.
 dnl AC_DEFINE(HAVE_XML4C) and AC_DEFINE(HAVE_XERCESC)
 dnl
-AC_DEFUN(AM_FERRIS_XERCESC,
+AC_DEFUN([AM_FERRIS_XERCESC],
 [dnl 
 dnl Get the cflags and libraries from pkg-config, stlport-config or attempt to
 dnl detect the STLPort on the users system.
@@ -1001,7 +1001,7 @@ dnl XALAN_CFLAGS and XALAN_LIBS are set and AC_SUBST()ed when library is found.
 dnl XML4C_CFLAGS   and XML4C_LIBS   are set and AC_SUBST()ed when library is found.
 dnl AC_DEFINE(HAVE_XML4C) and AC_DEFINE(HAVE_XALAN)
 dnl
-AC_DEFUN(AM_FERRIS_XALAN,
+AC_DEFUN([AM_FERRIS_XALAN],
 [dnl 
 dnl Get the cflags and libraries from pkg-config, stlport-config or attempt to
 dnl detect the STLPort on the users system.
@@ -1206,7 +1206,7 @@ dnl ######################################################################
 dnl ######################################################################
 
 
-AC_DEFUN(AM_FERRIS_BOOST_INTERNAL_TRYLINK,
+AC_DEFUN([AM_FERRIS_BOOST_INTERNAL_TRYLINK],
 [dnl 
 dnl
 	AC_LANG_CPLUSPLUS
@@ -1256,7 +1256,7 @@ dnl
 dnl BOOST_CFLAGS and BOOST_LIBS are set and AC_SUBST()ed when library is found.
 dnl AC_DEFINE(HAVE_BOOST) and AM_CONDITIONAL(HAVE_BOOST)
 dnl
-AC_DEFUN(AM_FERRIS_BOOST,
+AC_DEFUN([AM_FERRIS_BOOST],
 [dnl 
 dnl
 required_version=$1
@@ -1327,7 +1327,7 @@ dnl
 dnl PATHAN_CFLAGS and PATHAN_LIBS are set and AC_SUBST()ed when library is found.
 dnl AC_DEFINE(HAVE_PATHAN)
 dnl
-AC_DEFUN(AM_FERRIS_PATHAN,
+AC_DEFUN([AM_FERRIS_PATHAN],
 [dnl 
 dnl
 have_package=no
@@ -1463,7 +1463,7 @@ dnl
 dnl PATHAN2_CFLAGS and PATHAN2_LIBS are set and AC_SUBST()ed when library is found.
 dnl AC_DEFINE(HAVE_PATHAN2)
 dnl
-AC_DEFUN(AM_FERRIS_PATHAN2,
+AC_DEFUN([AM_FERRIS_PATHAN2],
 [dnl 
 dnl
 have_package=no
@@ -1607,7 +1607,7 @@ dnl
 dnl XQILLA_CFLAGS and XQILLA_LIBS are set and AC_SUBST()ed when library is found.
 dnl AC_DEFINE(HAVE_XQILLA)
 dnl
-AC_DEFUN(AM_FERRIS_XQILLA,
+AC_DEFUN([AM_FERRIS_XQILLA],
 [dnl 
 dnl
 have_package=no
@@ -1719,7 +1719,7 @@ dnl SOCKETPP_CFLAGS and SOCKETPP_LIBS are set and AC_SUBST()ed when library is f
 dnl AC_DEFINE(HAVE_SOCKETPP)
 dnl AM_CONDITIONAL(HAVE_SOCKETPP
 dnl
-AC_DEFUN(AM_FERRIS_SOCKETPP,
+AC_DEFUN([AM_FERRIS_SOCKETPP],
 [dnl 
 dnl
 have_package=no
@@ -4930,7 +4930,7 @@ AC_REQUIRE([KDE_CHECK_LIB64])
 AC_OBJEXT
 AC_EXEEXT
 
-AM_PROG_LIBTOOL
+AC_PROG_LIBTOOL
 AC_LIBTOOL_CXX
 
 LIBTOOL_SHELL="/bin/sh ./libtool"
@@ -7365,7 +7365,7 @@ dnl ie. default is to REQUIRE pqxx MINIMUM-VERSION or stop running.
 dnl
 dnl LIBPQXX_CFLAGS and LIBPQXX_LIBS are set and AC_SUBST()ed when library is found.
 dnl
-AC_DEFUN(AM_FERRIS_PQXX,
+AC_DEFUN([AM_FERRIS_PQXX],
 [dnl 
 dnl
 required_version=$1
@@ -7496,7 +7496,7 @@ dnl a CONDITIONAL FERRIS_HAVE_KDE3 is defined and the shell var have_kde3 is eit
 dnl
 dnl KDE3_CFLAGS and KDE3_LIBS are set and AC_SUBST()ed when library is found.
 dnl
-AC_DEFUN(AM_FERRIS_KDE,
+AC_DEFUN([AM_FERRIS_KDE],
 [dnl 
 dnl
 required_version=$1
@@ -7638,7 +7638,7 @@ dnl
 dnl The default ACTION-IF-NOT-FOUND is to say "xmms not detected..."
 dnl LIBXMMS_CFLAGS and LIBXMMS_LIBS are set and AC_SUBST()ed when library is found.
 dnl
-AC_DEFUN(AM_FERRIS_XMMS,
+AC_DEFUN([AM_FERRIS_XMMS],
 [dnl 
 dnl
 required_version=$1
@@ -7697,7 +7697,7 @@ dnl ie. default is to REQUIRE fuselage MINIMUM-VERSION or stop running.
 dnl
 dnl LIBFUSELAGE_CFLAGS and LIBFUSELAGE_LIBS are set and AC_SUBST()ed when library is found.
 dnl
-AC_DEFUN(AM_FERRIS_FUSELAGE,
+AC_DEFUN([AM_FERRIS_FUSELAGE],
 [dnl 
 dnl
 required_version=$1
@@ -7812,7 +7812,7 @@ dnl ie. default is to REQUIRE popt MINIMUM-VERSION or stop running.
 dnl
 dnl LIBPOPT_CFLAGS and LIBPOPT_LIBS are set and AC_SUBST()ed when library is found.
 dnl
-AC_DEFUN(AM_FERRIS_POPT,
+AC_DEFUN([AM_FERRIS_POPT],
 [dnl 
 dnl
 required_version=$1
