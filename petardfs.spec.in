@@ -52,7 +52,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,0755)
-%doc AUTHORS README COPYING ChangeLog INSTALL
+%doc AUTHORS COPYING ChangeLog INSTALL
 %attr(0555, root, root) %{_bindir}/*
 
 
