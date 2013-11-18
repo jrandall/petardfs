@@ -41,7 +41,7 @@ LF_SET_WARNINGS
 
 AC_SYS_LARGEFILE
 AC_DISABLE_STATIC
-AM_PROG_LIBTOOL
+AC_PROG_LIBTOOL
 
 PKG_CHECK_MODULES(FUSE, fuse >= 2.2 )
 AC_SUBST(FUSE_CFLAGS)
@@ -53,7 +53,6 @@ AM_FERRIS_POPT( 1.0.0 )
 
 AC_OUTPUT([
    Makefile
-   README
    petardfs.spec
    doc/Makefile
    m4/Makefile
