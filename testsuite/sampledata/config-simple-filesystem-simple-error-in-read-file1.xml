@@ -1,0 +1,72 @@
+<!DOCTYPE petardfs-config [
+
+<!ENTITY	EPERM		 "1">
+<!ENTITY	ENOENT		 "2">
+<!ENTITY	ESRCH		 "3">
+<!ENTITY	EINTR		 "4">
+<!ENTITY	EIO		 "5">
+<!ENTITY	ENXIO		 "6">
+<!ENTITY	E2BIG		 "7">
+<!ENTITY	ENOEXEC		 "8">
+<!ENTITY	EBADF		 "9">
+<!ENTITY	ECHILD		"10">
+<!ENTITY	EAGAIN		"11">
+<!ENTITY	ENOMEM		"12">
+<!ENTITY	EACCES		"13">
+<!ENTITY	EFAULT		"14">
+<!ENTITY	ENOTBLK		"15">
+<!ENTITY	EBUSY		"16">
+<!ENTITY	EEXIST		"17">
+<!ENTITY	EXDEV		"18">
+<!ENTITY	ENODEV		"19">
+<!ENTITY	ENOTDIR		"20">
+<!ENTITY	EISDIR		"21">
+<!ENTITY	EINVAL		"22">
+<!ENTITY	ENFILE		"23">
+<!ENTITY	EMFILE		"24">
+<!ENTITY	ENOTTY		"25">
+<!ENTITY	ETXTBSY		"26">
+<!ENTITY	EFBIG		"27">
+<!ENTITY	ENOSPC		"28">
+<!ENTITY	ESPIPE		"29">
+<!ENTITY	EROFS		"30">
+<!ENTITY	EMLINK		"31">
+<!ENTITY	EPIPE		"32">
+<!ENTITY	EDOM		"33">
+<!ENTITY	ERANGE		"34">
+
+
+]>
+
+<petardfs-config>
+    <errors>
+
+      <read>
+	<error path="/file2.txt">
+	  <n start-offset="4096" end-offset="4196" error-code="&EIO;"/> 
+	</error>
+	<error path="/file1.txt">
+	  <n start-offset="10000" end-offset="10000" error-code="&EINTR;" times="10"/>
+	</error>
+	<error path="/file3.txt">
+	  <n start-offset="20000" end-offset="20000" error-code="&EAGAIN;" times="3"/>
+	</error>
+	<error path="/file4.txt">
+	  <n start-offset="20000" end-offset="20000" error-code="&EBUSY;" times="3"/>
+	</error>
+      </read>
+
+
+      <write>
+	<error path="/new1.txt">
+	  <n start-offset="4096" end-offset="4196" error-code="&EIO;"/> 
+	</error>
+      </write>
+
+
+      <open>
+	<error path="/fooA.txt" error-code="&EIO;" />
+      </open>
+
+    </errors>
+</petardfs-config>

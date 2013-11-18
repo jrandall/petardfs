@@ -1,0 +1,61 @@
+%define	name	 petardfs
+%define ver      @PETARDFS_VERSION@
+%define rel      60001
+
+Summary: A FUSE filesystem designed to make applications blow up
+Name: %{name}
+Version: %{ver}
+Release: %{rel}
+License: GPL
+Group: System Environment/Libraries
+Source: http://prdownloads.sourceforge.net/witme/%{name}-%{ver}.tar.bz2
+BuildRoot: %{_tmppath}/%{name}-root
+Packager: Ben Martin <monkeyiq@users.sourceforge.net>
+URL: http://sourceforge.net/project/showfiles.php?group_id=16036
+Requires: fuse-libs >= 2.5.3
+Requires: fuse >= 2.5.3
+BuildRequires: fuse-devel
+
+
+%description
+Filesystem in User Space (FUSE) filesystem designed 
+as a decorator pattern filesystem. An underlying filesystem
+is taken normally simply passed back through the FUSE interface.
+However, errors can be added for some functions and offsets to test
+that application code responds to error conditions appropriately.
+
+%prep
+rm -rf $RPM_BUILD_ROOT
+
+%setup -q
+
+%build
+%configure 
+
+if [ "$SMP" != "" ]; then
+  (make "MAKE=make -k -j $SMP"; exit 0)
+  make
+else
+  make
+fi
+
+%install
+rm -rf $RPM_BUILD_ROOT
+%makeinstall
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%post -p /sbin/ldconfig
+
+%postun -p /sbin/ldconfig
+
+%files
+%defattr(-,root,root,0755)
+%doc AUTHORS README COPYING ChangeLog INSTALL
+%attr(0555, root, root) %{_bindir}/*
+
+
+%changelog
+* Tue Mar 13 2007 Ben Martin
+- Created 

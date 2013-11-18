@@ -1,0 +1,432 @@
+#   Copyright (C) 2003-2007 Ben Martin
+# Originally based on calc.exp which is GPL and Copyright (C) 1997 - 2001 Free Software Foundation, Inc.
+# Though not much of the base remains....
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+
+#
+#
+# Some tools that you will need to perform all the testing;;
+#
+# /tmp/testing-tmpfs should be a tmpfs of 16mb user mount/demountable
+# /etc/fstab entry
+# tmpfs                   /tmp/testing-tmpfs   tmpfs   size=16m,user   0 0
+# /tmp/testing-tmpfs should be mounted before running this test suite
+#
+# 
+# The user running the test suite should be able to mount/umount FUSE
+# filesystems. A bunch of stuff will be placed into /tmp/petardfs-testsuite-tmp
+# which is used for FUSE filesystems and expanded test input.
+#
+#
+#
+
+set PETARDFS "$UTBASE/../src/petardfs"
+#set PETARDFS "petardfs"
+set PTT "/tmp/petardfs-testsuite-tmp"
+set TMPFS "/tmp/testing-tmpfs"
+set timeout 145
+# set verbose 3
+
+#
+# expectations that clean up in case of error. Note that `$test' is
+# a purely local variable.
+#
+# The first of these is used to match any bad responses, and resynchronise
+# things by finding a prompt. The second is a timeout error, and shouldn't
+# ever be triggered.
+#
+expect_after {
+    global expect_out
+
+	-re "\[^\n\r\]*$prompt$" {
+		fail "$test (bad match)"
+		if { $verbose > 0 } {
+			regexp ".*\r\n(\[^\r\n\]+)(\[\r\n\])+$prompt$" \
+						$expect_out(buffer) "" output
+			send_user "\tUnmatched output: \"$output\"\n"
+		}
+	}
+	timeout {
+		fail "$test (timeout)"
+	}
+}
+
+##
+## some nice general purpose functions
+##
+
+
+#
+# remove and recreate a /tmp/foo directory
+#
+proc recreate_clean_tmp_subdir { path } {
+    send_user  "recreate_clean_tmp_subdir $path\n"
+    system touch     $path
+    system chmod -R u+rwx $path
+    system rm -rf   $path
+    system mkdir -p $path
+}
+
+proc remount_tmpfs { } {
+    global TMPFS
+    spawn umount $TMPFS 
+    expect
+    sleep 1
+    system mount   $TMPFS
+}
+
+################################################################################
+################################################################################
+################################################################################
+
+set rt_version_var 1;
+
+proc rt_version { prefixstr } {
+    global rt_version_var;
+    incr rt_version_var;
+    set tmp $prefixstr;
+    append tmp $rt_version_var;
+    return "$tmp";
+}
+
+proc rt_capture_out { testname expected cmd expect_out_buffer_so_far getrest } {
+
+    global SDATA
+    global verbose
+    upvar spawn_id spawn_id;
+    global expect_out
+
+    send_user "rt_capture_out $getrest\n"
+    set actual "$expect_out_buffer_so_far";
+    send_user "FAILING... $testname  getrest:$getrest  actual:$actual\n";
+    if { $getrest > 0 } {
+	set timeout 5;
+	expect {
+	    eof { append actual $expect_out(buffer); }
+	    timeout { }
+	}
+    }
+    set OUTFILEBASE "/tmp/ferris-test-output/";
+    system mkdir -p $OUTFILEBASE;
+    set outfilename "$OUTFILEBASE/$testname";
+    fail "cmd: $cmd SEE: $outfilename ";
+
+    send_user "OUTFILE:$outfilename\n";
+    send_user "actual:$actual\n";
+    set dumpfile [ open "$outfilename" w ];
+    puts $dumpfile " cmd: $cmd\n";
+    puts $dumpfile " expected: $expected\n";
+    puts $dumpfile " actual: $actual\n";
+    close $dumpfile;
+
+    set dumpfile [ open "$outfilename.expected" w ];
+    puts $dumpfile "$expected";
+    close $dumpfile;
+    set dumpfile [ open "$outfilename.actual" w ];
+    puts $dumpfile "$actual";
+    close $dumpfile;
+
+}
+
+proc rt_expected { testname expected cmd } {
+    global SDATA
+    global verbose
+    global expect_out
+
+    set failed_with_timeout 0
+    set failed_with_eof 0
+    send_user "rt_expected cmd:$cmd\n";
+    eval spawn $cmd
+    expect {
+        $expected { 
+	    pass "XXX $cmd ex:$expected buf:$expect_out(buffer)"; 
+	    if { $expected != "eof" } {
+		expect eof;
+	    }
+	    return; 
+	}
+	timeout { set failed_with_timeout 1; set bufcache "$expect_out(buffer)"; }
+	eof { set failed_with_eof 1; set bufcache "$expect_out(buffer)"; }
+	-re "cought e" { set bufcache "$expect_out(buffer)"; }
+	-re "error:" { set bufcache "$expect_out(buffer)"; }
+	-re "Error:" { set bufcache "$expect_out(buffer)"; }
+	-re "ERROR" { set bufcache "$expect_out(buffer)"; }
+	"Unhandled Java exception" { set bufcache "$expect_out(buffer)"; }
+    }
+
+    set getrest 0;
+    if { $failed_with_timeout != 1 } {
+	if { $failed_with_eof != 1 } {
+	    set getrest 1;
+	}
+    }
+    rt_capture_out $testname $expected $cmd $bufcache $getrest;
+
+
+#     set actual $expect_out(buffer);
+#     send_user "FAILING... $testname  actual:$actual\n";
+#     if { $failed_with_timeout != 1 } {
+# 	if { $failed_with_eof != 1 } {
+# 	    expect {
+# 		eof { append actual $expect_out(buffer); }
+# 	    }
+# 	}
+#     }
+#     set OUTFILEBASE "/tmp/ferris-test-output/";
+#     system mkdir -p $OUTFILEBASE;
+#     set outfilename "$OUTFILEBASE/$testname";
+#     fail "failed_with_timeout:$failed_with_timeout cmd: $cmd SEE: $outfilename ";
+
+#     set dumpfile [ open "$outfilename" w ];
+#     puts $dumpfile " failed_with_timeout:$failed_with_timeout\n";
+#     puts $dumpfile " cmd: $cmd\n";
+#     puts $dumpfile " expected: $expected\n";
+#     puts $dumpfile " actual: $actual\n";
+}
+
+proc rt_expected_re { testname expected cmd } {
+    global SDATA
+    global verbose
+    global expect_out
+
+    set failed_with_timeout 0
+    set failed_with_eof 0
+    send_user "rt_expected_re cmd:$cmd\n";
+    eval spawn $cmd
+    expect {
+        -re $expected { 
+	    pass "XXX $cmd ex:$expected buf:$expect_out(buffer)"; 
+	    if { $expected != "eof" } {
+		expect eof;
+	    }
+	    return; 
+	}
+	timeout { set failed_with_timeout 1; set bufcache "$expect_out(buffer)"; }
+	eof { set failed_with_eof 1; set bufcache "$expect_out(buffer)"; }
+	-re "cought e" { set bufcache "$expect_out(buffer)"; }
+	-re "error:" { set bufcache "$expect_out(buffer)"; }
+	-re "Error:" { set bufcache "$expect_out(buffer)"; }
+	-re "ERROR" { set bufcache "$expect_out(buffer)"; }
+	"Unhandled Java exception" { set bufcache "$expect_out(buffer)"; }
+    }
+
+    set getrest 0;
+    if { $failed_with_timeout != 1 } {
+	if { $failed_with_eof != 1 } {
+	    set getrest 1;
+	}
+    }
+
+    rt_capture_out $testname $expected $cmd $bufcache $getrest;
+}
+
+proc verify_output_contains { cmd expected_quoted } {
+    
+    global SDATA
+    global verbose
+    
+    set expected [string trim $expected_quoted "\""]
+
+    set testname [rt_version "verify_output_contains" ]
+    rt_expected "$testname" "$expected" "$cmd";
+
+#     set CLIENT "verify file information"
+#     spawn bash -c "$cmd"
+#     expect {
+# 	$expected { pass "$CLIENT"; return; }
+# 	-re "cought e:" { fail "$CLIENT Failed with an exception cmd: $cmd"; return; }
+# 	-re "error:" { fail "$CLIENT Failed with an exception cmd: $cmd"; return; }
+# 	timeout { fail "$CLIENT Failed with timeout cmd: $cmd"; return; }
+#     }
+#     fail "$CLIENT didn't give expected output:$expected cmd: $cmd"
+}
+
+proc mydiff { testname diffflags fileA fileB } {
+
+    set cmd "diff -Nsuar $diffflags $fileA $fileB"
+    rt_expected "$testname" "Files $fileA and $fileB are identical" "$cmd";
+}
+
+set verify_output_identical_counter 1
+
+proc verify_output_identical { cmdA cmdB diffflags } {
+    
+    global SDATA
+    global verbose
+    global verify_output_identical_counter
+
+    set out1 "/tmp/cmdA.out"
+    set out2 "/tmp/cmdB.out"
+    system "eval $cmdA >|$out1"
+    system "eval $cmdB >|$out2"
+    
+    set cmd "diff -Nsuar $diffflags $out1 $out2"
+    set testname [rt_version "verify_output_identical cmdA:$cmdA cmdB:$cmdB" ]
+    set verify_output_identical_counter [ expr $verify_output_identical_counter + 1 ]
+    set capfile "verify_output_identical_$verify_output_identical_counter"
+    rt_expected "$capfile" "Files $out1 and $out2 are identical" "$cmd";
+
+#     spawn bash -c "$cmd"
+#     expect {
+# 	"Files $out1 and $out2 are identical" { pass "expected output found"; return; }
+#     }
+#     fail "Different output than expected found. cmdA:$cmdA cmdB:$cmdB "
+}
+
+
+
+################################################################################
+################################################################################
+################################################################################
+#
+# test the petardfs in pass through mode, no errors should be present and all
+# the data should be identical to the basefs
+#
+################################################################################
+################################################################################
+################################################################################
+
+proc setup_basedir_and_input {} {
+
+    global PTT
+    global UTBASE
+    global SDATA
+    global verbose
+    global PETARDFS
+
+    set BASEDIR $PTT
+    
+    recreate_clean_tmp_subdir "$BASEDIR"
+    recreate_clean_tmp_subdir "$BASEDIR/input"
+    recreate_clean_tmp_subdir "$BASEDIR/fusefs"
+    system tar -C  "$BASEDIR/input" -xf $SDATA/simple-filesystem.tar
+    cd $BASEDIR
+}
+
+proc unmount_petardfs {} {
+
+    global PTT
+    set BASEDIR $PTT
+
+    sleep 3;
+    cd "/tmp"
+    system fusermount -u "$BASEDIR/fusefs"
+}
+
+proc run_noerror_petardfs_test_suite {} {
+    
+    global PTT
+    global UTBASE
+    global SDATA
+    global verbose
+    global PETARDFS
+
+    set BASEDIR $PTT
+    setup_basedir_and_input;
+
+    cd $BASEDIR
+    system $PETARDFS -u "$BASEDIR/input" "$BASEDIR/fusefs"
+    if { $verbose > 1 } {
+	send_user "Mounted petardfs with no specified errors...\n"
+    }
+
+    cd "$BASEDIR/input"
+    system tar cf "$BASEDIR/input.tar" .
+    cd "$BASEDIR/fusefs"
+    system tar cf "$BASEDIR/fusefs.tar" .
+
+    set inputmd5  [ exec md5sum "$BASEDIR/input.tar"  | cut -c 0-32  ];
+    set fusefsmd5 [ exec md5sum "$BASEDIR/fusefs.tar" | cut -c 0-32  ];
+
+    set TNAME "Testing tarball creation from petardfs(no errors) with original input" 
+    if [ string match $inputmd5 $fusefsmd5 ] {
+	pass "$TNAME"
+    } else {
+	fail "$TNAME expected:$inputmd5 got:$fusefsmd5";
+    }
+
+    unmount_petardfs;
+}
+
+
+proc run_simple_petardfs_test_suite {} {
+    
+    global PTT
+    global UTBASE
+    global SDATA
+    global verbose
+    global PETARDFS
+
+    set ERRORDESC "$SDATA/config-simple-filesystem-simple-error-in-read-file1.xml"
+    set BASEDIR $PTT
+    setup_basedir_and_input;
+
+    cd $BASEDIR
+    system $PETARDFS -e "$ERRORDESC" -u "$BASEDIR/input" "$BASEDIR/fusefs"
+    if { $verbose > 1 } {
+	send_user "Mounted petardfs with specified errors:$ERRORDESC...\n"
+    }
+
+    set testname [rt_version "io-error-at-4096" ]
+    rt_expected $testname  "Input/output error" "cat $BASEDIR/fusefs/file2.txt"
+
+    set testname [rt_version "write-io-error-on-new1" ]
+    rt_expected_re $testname  "writing.*Input/output error" \
+	"cp $BASEDIR/input/file1.txt $BASEDIR/fusefs/new1.txt"
+
+    # file1.txt has some EINTR returns
+    verify_output_identical \
+	"cat $BASEDIR/input/file1.txt" \
+	"cat $BASEDIR/fusefs/file1.txt" "-Nuar"
+
+    set testname [rt_version "attempt-to-open-fooA" ]
+    rt_expected_re $testname  "cat:.*Input/output error" \
+	"cat $BASEDIR/fusefs/fooA.txt"
+
+    set testname [rt_version "attempt-to-open-fooA-ut" ]
+    rt_expected $testname  "Failed with EIO" \
+	"$UTBASE/ut_simpleread -1 -u $BASEDIR/fusefs/fooA.txt"
+
+
+
+    unmount_petardfs;
+}
+
+################################################################################
+################################################################################
+################################################################################
+#
+# Here we go
+#
+################################################################################
+################################################################################
+################################################################################
+
+set cdate [ exec date "+%Y-%M-%d-%H_%M_%S" ]
+#set etagerebak "~/.ferris/etagere.user.autobackup.$cdate"
+
+
+proc run_all {} {
+
+    verbose "Running all existing tests... this will take a long time..."
+    run_noerror_petardfs_test_suite
+    run_simple_petardfs_test_suite
+}
+
+
+run_all
+
+
