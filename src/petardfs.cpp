@@ -46,7 +46,7 @@ using namespace Fuselage::Helpers;
 
 #include <sys/time.h>
 #include <sys/types.h>
-#include <attr/xattr.h>
+#include <sys/xattr.h>
 
 #include <vector>
 #include <string>
