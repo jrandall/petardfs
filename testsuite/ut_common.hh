@@ -31,6 +31,7 @@
 #include <popt.h>
 #include <errno.h>
 
+#include <cstdlib>
 #include <iostream>
 #include <sstream>
 #include <fstream>
