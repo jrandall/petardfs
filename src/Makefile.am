@@ -24,6 +24,7 @@ AM_CPPFLAGS =                                           \
 bin_PROGRAMS = petardfs
 
 petardfs_SOURCES = petardfs.cpp
-petardfs_CPPFLAGS = -DFUSE_USE_VERSION=25 $(FUSE_CFLAGS)
+petardfs_CPPFLAGS = -DFUSE_USE_VERSION=25 $(AM_CPPFLAGS)
+#$(FUSE_CFLAGS) $(LIBPOPT_CFLAGS) $(LIBFUSELAGE_CFLAGS)
 petardfs_LDADD = $(FUSE_LIBS) @XML4C_LIBS@  @LIBFUSELAGE_LIBS@ @LIBPOPT_LIBS@
 
