@@ -1,6 +1,5 @@
 
 
-
 dnl #####################################################################
 dnl #####################################################################
 dnl #####################################################################
@@ -16,10 +15,10 @@ AC_DEFUN([AM_FERRIS_INTERNAL_TRYLINK],
 [dnl
 dnl
 	AC_LANG([C++])
-	CXXFLAGS_cache=$CXXFLAGS
-	CXXFLAGS=" $CXXFLAGS $1 "
-	LDFLAGS_cache=$LDFLAGS
-	LDFLAGS=" $LDFLAGS $2 "
+	CPPFLAGS_cache=$CPPFLAGS
+	CPPFLAGS=" $CPPFLAGS $1 "
+	LIBS_cache=$LIBS
+	LIBS=" $LIBS $2 "
 
 	AC_LINK_IFELSE(
 		[AC_LANG_PROGRAM([[$3]],
@@ -27,9 +26,9 @@ dnl
 	       	[trylink_passed=yes ],
 	       	[trylink_passed=no] )
 
-	LDFLAGS=$LDFLAGS_cache
-	CXXFLAGS=$CXXFLAGS_cache
-	AC_LANG_C
+	LIBS=$LIBS_cache
+	CPPFLAGS=$CPPFLAGS_cache
+	AC_LANG([C])
 
 	if test x"$trylink_passed" = xyes; then
 	     ifelse([$5], , :, [$5])     
@@ -55,10 +54,10 @@ AC_DEFUN([AM_FERRIS_INTERNAL_TRYRUN],
 [dnl
 dnl
 	AC_LANG([C++])
-	CXXFLAGS_cache=$CXXFLAGS
-	CXXFLAGS=" $CXXFLAGS $1 "
-	LDFLAGS_cache=$LDFLAGS
-	LDFLAGS=" $LDFLAGS $2 "
+	CPPFLAGS_cache=$CPPFLAGS
+	CPPFLAGS=" $CPPFLAGS $1 "
+	LIBS_cache=$LIBS
+	LIBS=" $LIBS $2 "
 
 	AC_RUN_IFELSE(
 		[AC_LANG_SOURCE([[
@@ -70,9 +69,9 @@ dnl
 	       	[trylink_passed=yes ],
 	       	[trylink_passed=no] )
 
-	LDFLAGS=$LDFLAGS_cache
-	CXXFLAGS=$CXXFLAGS_cache
-	AC_LANG_C
+	LIBS=$LIBS_cache
+	CPPFLAGS=$CPPFLAGS_cache
+	AC_LANG([C])
 
 	if test x"$trylink_passed" = xyes; then
 	     ifelse([$5], , :, [$5])     
@@ -259,7 +258,7 @@ HEREDOC
 )"
 
 CXXFLAGS_cache=$CXXFLAGS
-LDFLAGS_cache=$LDFLAGS
+LIBS_cache=$LIBS
 AC_LANG([C++])
 have_package=no
 
@@ -272,7 +271,7 @@ if test x"$have_package" = xno; then
 				[have_package=yes], [have_package=no] )
 fi
 
-# try to hit it directly.
+# try /usr/local/lib
 if test x"$have_package" = xno; then
 	LIBFUSELAGE_CFLAGS=" $STLPORT_CFLAGS $CXXFLAGS $LIBFUSELAGE_CFLAGS $LIBFUSELAGE_CXXFLAGS -I/usr/local/include "
 	LIBFUSELAGE_LIBS=" $STLPORT_LIBS $LDFLAGS -L/usr/local/lib -lfuselagefs "
@@ -281,8 +280,8 @@ if test x"$have_package" = xno; then
 				[have_package=yes], [have_package=no] )
 fi
 
-AC_LANG_C
-LDFLAGS=$LDFLAGS_cache
+AC_LANG([C])
+LIBS=$LIBS_cache
 CXXFLAGS=$CXXFLAGS_cache
 
 fi
@@ -368,7 +367,7 @@ HEREDOC
 )"
 
 CXXFLAGS_cache=$CXXFLAGS
-LDFLAGS_cache=$LDFLAGS
+LIBS_cache=$LIBS
 AC_LANG([C++])
 have_package=no
 
@@ -390,8 +389,8 @@ if test x"$have_package" = xno; then
 				[have_package=yes], [have_package=no] )
 fi
 
-AC_LANG_C
-LDFLAGS=$LDFLAGS_cache
+AC_LANG([C])
+LIBS=$LIBS_cache
 CXXFLAGS=$CXXFLAGS_cache
 
 fi
