@@ -11,3 +11,32 @@
 *.lai
 *.la
 *.a
+
+# Generated autoconf and automake files
+Makefile
+Makefile.in
+config.h
+config.h.in
+configure
+petardfs.spec
+stamp-h1
+config.log
+config.status
+config/*
+
+# files pulled in by aclocal/libtool
+libtool
+aclocal.m4
+macros/libtool.m4
+macros/ltoptions.m4
+macros/ltsugar.m4
+macros/ltversion.m4
+macros/lt~obsolete.m4
+
+# caches/temp dirs
+autom4te.cache/
+.deps/
+
+# binaries
+src/petardfs
+testsuite/ut_simpleread
