@@ -61,7 +61,7 @@ using namespace std;
 #include <xercesc/sax/InputSource.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/util/XMLString.hpp>
-#include <xercesc/util/XMLString.hpp>
+#include <xercesc/framework/XMLFormatter.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/framework/LocalFileInputSource.hpp>
